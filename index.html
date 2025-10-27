@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhammed Rashid KP - Software Engineer</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Devicon (for tech logos) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    
+    <!-- Font Awesome (for social icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Styles for Theme and Animations -->
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Set default font */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+        }
+
+        /* Custom Tailwind utility for the neon purple glow */
+        @layer utilities {
+            .shadow-purple-glow {
+                box-shadow: 0 0 15px rgba(192, 132, 252, 0.4), 0 0 5px rgba(192, 132, 252, 0.3);
+                transition: box-shadow 0.3s ease-in-out;
+            }
+            .hover\:shadow-purple-glow:hover {
+                box-shadow: 0 0 25px rgba(192, 132, 252, 0.6), 0 0 10px rgba(192, 132, 252, 0.4);
+            }
+            .text-glow {
+                text-shadow: 0 0 8px rgba(192, 132, 252, 0.6);
+            }
+        }
+
+        /* Neon pulse animation for hero image */
+        @keyframes neon-pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(192, 132, 252, 0.4), 0 0 20px rgba(192, 132, 252, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(192, 132, 252, 0.7), 0 0 30px rgba(192, 132, 252, 0.5);
+            }
+        }
+        .animate-neon-pulse {
+            animation: neon-pulse 3s infinite ease-in-out;
+        }
+
+        /* Scroll-in animation */
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Initial state for reveal elements */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* Active state (triggered by JS) */
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Skill bar animation */
+        @keyframes progress-bar {
+            from { width: 0; }
+        }
+        .animate-progress {
+            animation: progress-bar 1.5s ease-out forwards;
+        }
+
+        /* Typewriter Animation */
+        .typewriter-container {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .typewriter-text {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .05em;
+            border-right: .1em solid #c084fc; /* The cursor */
+            animation:
+                typing 2.5s steps(30, end) forwards,
+                blink-caret .75s step-end infinite;
+        }
+
+        /* Typing effect */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        /* Cursor blinking effect */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #c084fc; }
+        }
+
+    </style>
+</head>
+<body class="bg-black text-slate-200 antialiased">
+
+    <!-- Particle Canvas -->
+    <!-- This canvas will be in the background. Content is placed on top with z-index. -->
+    <canvas id="particle-canvas" class="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"></canvas>
+
+    <!-- Main Content Wrapper -->
+    <!-- All page content goes in here, with a relative z-index to sit on top of the canvas -->
+    <div class="relative z-10">
+
+        <!-- Header / Navigation -->
+        <header class="sticky top-0 z-50 w-full">
+            <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center bg-black/60 backdrop-blur-md border-b border-slate-800">
+                <!-- Logo Placeholder -->
+                <a href="#home" class="text-2xl font-extrabold text-white tracking-wider">
+                    <span class="text-purple-400">R</span>ASHID
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+                    <a href="#home" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Home</a>
+                    <a href="#about" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">About</a>
+                    <a href="#skills" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Skills</a>
+                    <a href="#projects" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Projects</a>
+                    <a href="#education" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Education</a>
+                    <a href="#contact" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-slate-300 hover:text-purple-400 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-black/90 backdrop-blur-md border-b border-slate-800">
+                <div class="flex flex-col space-y-4 p-5">
+                    <a href="#home" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Home</a>
+                    <a href="#about" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">About</a>
+                    <a href="#skills" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Skills</a>
+                    <a href="#projects" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Projects</a>
+                    <a href="#education" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Education</a>
+                    <a href="#contact" class="text-slate-300 hover:text-purple-400 transition-colors duration-200">Contact</a>
+                    <div class="flex space-x-6 pt-4">
+                        <a href="https://www.linkedin.com/in/muhammed-rashid-kp-702b2b33b" target="_blank" class="text-slate-300 hover:text-purple-400 transition-colors duration-200" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin text-2xl"></i>
+                        </a>
+                        <a href="https://github.com/rashid-kp" target="_blank" class="text-slate-300 hover:text-purple-400 transition-colors duration-200" aria-label="GitHub">
+                            <i class="fa-brands fa-github text-2xl"></i>
+                        </a>
+                        <a href="https://www.instagram.com/rashhiyee" target="_blank" class="text-slate-300 hover:text-purple-400 transition-colors duration-200" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram text-2xl"></i>
+                        </a>
+                        <a href="https://x.com/KpRaashid" target="_blank" class="text-slate-300 hover:text-purple-400 transition-colors duration-200" aria-label="Twitter (X)">
+                            <i class="fa-brands fa-x-twitter text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Hero Section -->
+            <section id="home" class="min-h-screen flex items-center justify-center text-center overflow-hidden px-4">
+                <div class="flex flex-col items-center space-y-8">
+                    <!-- Image Placeholder -->
+                    <!-- I added overflow-hidden here to ensure the image clips correctly -->
+                    <div class="w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-slate-800/50 border-4 border-purple-500 animate-neon-pulse flex items-center justify-center text-slate-500 overflow-hidden">
+                        <!-- This is the SVG I removed -->
+                        <!-- <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> -->
+                        
+                        <!-- This is the new <img> tag -->
+                        <!-- The object-cover class scales the image to fill the circle, and rounded-full clips it -->
+                        <img src="assets/mecb.png" alt="Muhammed Rashid KP" class="w-full h-full object-cover rounded-full">
+                        
+                        <span class="sr-only">Profile Image Placeholder</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-tight reveal">
+                        <span class="block text-2xl sm:text-4xl font-medium text-slate-300">HEY, I'M</span>
+                        <!-- Gradient Text -->
+                        <span class="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">RASHID</span>
+                    </h1>
+
+                    <!-- Typewriter Text Container -->
+                    <div class="text-xl sm:text-2xl font-medium text-purple-400 text-glow reveal h-8 sm:h-10">
+                        <div class="typewriter-container">
+                            <span id="typewriter-text" class="typewriter-text"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-4 pt-4 reveal">
+                        <a href="#projects" class="px-8 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-500 transition-all duration-300 hover:shadow-purple-glow">
+                            View My Work
+                        </a>
+                        <a href="#contact" class="px-8 py-3 bg-slate-700 text-slate-200 font-semibold rounded-lg shadow-lg hover:bg-slate-600 transition-all duration-300">
+                            Get In Touch
+                        </a>
+                    </div>
+
+                    <!-- Social Icons -->
+                    <div class="flex space-x-6 pt-8 reveal">
+                        <a href="https://www.linkedin.com/in/muhammed-rashid-kp-702b2b33b" target="_blank" class="text-slate-300 hover:text-purple-400 transition-colors duration-200" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin text-3xl"></i>
+                        </a>
+                        <a href="https://github.com/rashid-kp" target="_blank" class="text-slate-300 hover:text-purple-400 transition-colors duration-200" aria-label="GitHub">
+                            <i class="fa-brands fa-github text-3xl"></i>
+                        </a>
+                        <a href="https://www.instagram.com/rashhiyee" target="_blank" class="text-slate-300 hover:text-purple-400 transition-colors duration-200" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram text-3xl"></i>
+                        </a>
+                        <a href="https://x.com/KpRaashid" target="_blank" class="text-slate-300 hover:text-purple-400 transition-colors duration-200" aria-label="Twitter (X)">
+                            <i class="fa-brands fa-x-twitter text-3xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="py-20 lg:py-32 bg-black/50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16 reveal">
+                        <span class="text-purple-400 text-glow">ABOUT</span> ME
+                    </h2>
+                    <div class="max-w-4xl mx-auto text-lg text-slate-300 leading-relaxed text-center">
+                        <p class="reveal">
+                            Innovative and detail-oriented BCA graduate with a strong foundation in software development and IT. Proficient in Flutter, Dart, Python, Java, PHP, and C++, with academic experience in building cross-platform applications.
+                        </p>
+                        <p class="mt-4 reveal">
+                            Skilled in UI/UX, API integration, and database management. I also have experience in video editing, poster designing, and digital content creation, bringing a creative edge to technical projects. Passionate about using technology and design to build scalable, user-centric solutions.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="py-20 lg:py-32">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16 reveal">
+                        MY <span class="text-purple-400 text-glow">SKILLS</span>
+                    </h2>
+                    
+                    <!-- New Skill Grid -->
+                    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                        
+                        <!-- Skill Item: Flutter -->
+                        <div class="reveal">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="devicon-flutter-plain text-purple-400 text-3xl"></i>
+                                    <span class="text-xl font-semibold text-white">Flutter</span>
+                                </div>
+                                <span class="text-sm font-medium text-slate-300">90%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 0%;" data-width="90%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item: Dart -->
+                        <div class="reveal">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="devicon-dart-plain text-purple-400 text-3xl"></i>
+                                    <span class="text-xl font-semibold text-white">Dart</span>
+                                </div>
+                                <span class="text-sm font-medium text-slate-300">85%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 0%;" data-width="85%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item: Python -->
+                        <div class="reveal">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="devicon-python-plain text-purple-400 text-3xl"></i>
+                                    <span class="text-xl font-semibold text-white">Python</span>
+                                </div>
+                                <span class="text-sm font-medium text-slate-300">75%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 0%;" data-width="75%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item: Java -->
+                        <div class="reveal">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="devicon-java-plain text-purple-400 text-3xl"></i>
+                                    <span class="text-xl font-semibold text-white">Java</span>
+                                </div>
+                                <span class="text-sm font-medium text-slate-300">70%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 0%;" data-width="70%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Skill Item: C++ -->
+                        <div class="reveal">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="devicon-cplusplus-plain text-purple-400 text-3xl"></i>
+                                    <span class="text-xl font-semibold text-white">C++</span>
+                                </div>
+                                <span class="text-sm font-medium text-slate-300">70%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 0%;" data-width="70%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item: HTML/CSS/JS -->
+                        <div class="reveal">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="devicon-html5-plain text-purple-400 text-3xl"></i>
+                                    <span class="text-xl font-semibold text-white">HTML/CSS/JS</span>
+                                </div>
+                                <span class="text-sm font-medium text-slate-300">80%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 0%;" data-width="80%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item: PHP -->
+                        <div class="reveal">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="devicon-php-plain text-purple-400 text-3xl"></i>
+                                    <span class="text-xl font-semibold text-white">PHP</span>
+                                </div>
+                                <span class="text-sm font-medium text-slate-300">65%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 0%;" data-width="65%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item: MySQL -->
+                        <div class="reveal">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="devicon-mysql-plain text-purple-400 text-3xl"></i>
+                                    <span class="text-xl font-semibold text-white">MySQL</span>
+                                </div>
+                                <span class="text-sm font-medium text-slate-300">75%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 0%;" data-width="75%"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="py-20 lg:py-32 bg-black/50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16 reveal">
+                        MY <span class="text-purple-400 text-glow">PROJECTS</span>
+                    </h2>
+                    
+                    <!-- Projects Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                        
+                        <!-- Project 1: QuizFi -->
+                        <div class="bg-slate-900 rounded-xl overflow-hidden shadow-purple-glow hover:shadow-purple-glow transition-all duration-300 flex flex-col reveal">
+                            <!-- Project Image Placeholder -->
+                            <div class="h-60 bg-slate-800 flex items-center justify-center text-slate-500">
+                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14m6-6l.01.01"></path></svg>
+                                <span class="ml-2">Project Thumbnail</span>
+                            </div>
+                            <div class="p-6 flex-grow flex flex-col">
+                                <h3 class="text-2xl font-bold text-white mb-3">QuizFi - Smart Quiz Platform</h3>
+                                <p class="text-slate-300 mb-4 flex-grow">
+                                    A dynamic quiz application built using Flutter, designed for interactive learning and engagement. Features real-time leaderboards, AI-based suggestions, and timed challenges.
+                                </p>
+                                <!-- Tech Stack Tags -->
+                                <div class="flex flex-wrap gap-2 mb-6">
+                                    <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full">Flutter</span>
+                                    <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full">Dart</span>
+                                    <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full">MySQL</span>
+                                    <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full">UI/UX Design</span>
+                                </div>
+                                <!-- Project Links -->
+                                <div class="flex space-x-4">
+                                    <a href="#" class="px-5 py-2 bg-slate-700 text-slate-200 font-semibold rounded-lg hover:bg-slate-600 transition-all duration-300">
+                                        GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 2: Placeholder -->
+                        <div class="bg-slate-900 rounded-xl overflow-hidden shadow-purple-glow hover:shadow-purple-glow transition-all duration-300 flex flex-col reveal">
+                            <!-- Project Image Placeholder -->
+                            <div class="h-60 bg-slate-800 flex items-center justify-center text-slate-500">
+                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14m6-6l.01.01"></path></svg>
+                                <span class="ml-2">Project Thumbnail</span>
+                            </div>
+                            <div class="p-6 flex-grow flex flex-col">
+                                <h3 class="text-2xl font-bold text-white mb-3">Upcoming Project</h3>
+                                <p class="text-slate-300 mb-4 flex-grow">
+                                    Description of another awesome project will go here. Stay tuned!
+                                </p>
+                                <!-- Tech Stack Tags -->
+                                <div class="flex flex-wrap gap-2 mb-6">
+                                    <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full">React</span>
+                                    <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full">Node.js</span>
+                                    <span class="text-xs font-semibold bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full">MongoDB</span>
+                                </div>
+                                <!-- Project Links -->
+                                <div class="flex space-x-4">
+                                    <a href="#" class="px-5 py-2 bg-slate-700 text-slate-200 font-semibold rounded-lg hover:bg-slate-600 transition-all duration-300">
+                                        GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Education & Certifications Section -->
+            <section id="education" class="py-20 lg:py-32">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16 reveal">
+                        EDUCATION & <span class="text-purple-400 text-glow">CERTIFICATIONS</span>
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+                        
+                        <!-- Education Column -->
+                        <div class="reveal">
+                            <h3 class="text-2xl font-bold text-white text-center md:text-left mb-8">Education</h3>
+                            <div class="space-y-6 border-l-2 border-purple-500/30 pl-6">
+                                <div class="relative">
+                                    <div class="absolute -left-7 w-3 h-3 bg-purple-500 rounded-full top-2"></div>
+                                    <h4 class="text-xl font-semibold text-white">Masters in Computer Applications (MCA)</h4>
+                                    <p class="text-slate-300">College of Engineering Trivandrum</p>
+                                    <p class="text-sm text-purple-400 font-medium">(Present)</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-7 w-3 h-3 bg-purple-500 rounded-full top-2"></div>
+                                    <h4 class="text-xl font-semibold text-white">Bachelor of Computer Applications (BCA)</h4>
+                                    <p class="text-slate-300">KBSGCT, Thalassery</p>
+                                    <p class="text-sm text-purple-400 font-medium">June 2022 - March 2025</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-7 w-3 h-3 bg-purple-500 rounded-full top-2"></div>
+                                    <h4 class="text-xl font-semibold text-white">Higher Secondary (Plus Two)</h4>
+                                    <p class="text-slate-300">TMHSS Vellora</p>
+                                    <p class="text-sm text-purple-400 font-medium">June 2020 - March 2022</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Certifications Column -->
+                        <div class="reveal">
+                            <h3 class="text-2xl font-bold text-white text-center md:text-left mb-8">Certifications</h3>
+                            <div class="space-y-6">
+                                <div class="bg-slate-900 p-6 rounded-lg shadow-purple-glow">
+                                    <h4 class="text-xl font-semibold text-white">Full Stack Web Developer</h4>
+                                    <p class="text-purple-400 font-medium">OneRoadmap</p>
+                                    <p class="text-slate-300 mt-2 text-sm">
+                                        Certified in HTML, CSS, JavaScript, Node.js, Express, React, and MongoDB. DPIIT-recognized & MSME-registered.
+                                    </p>
+                                </div>
+                                <!-- Add other certs here -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="py-20 lg:py-32 bg-black/50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl text-center">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-8 reveal">
+                        GET IN <span class="text-purple-400 text-glow">TOUCH</span>
+                    </h2>
+                    <p class="text-lg text-slate-300 mb-12 reveal">
+                        I'm passionate about building scalable, user-centric solutions and I'm currently open to new opportunities. Whether you have a project in mind or just want to connect, feel free to reach out!
+                    </p>
+                    
+                    <!-- Contact Form -->
+                    <form id="contact-form" class="max-w-xl mx-auto text-left space-y-6 reveal">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-slate-300 mb-2">Your Name</label>
+                            <input type="text" id="name" name="name" required
+                                   class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Your Email</label>
+                            <input type="email" id="email" name="email" required
+                                   class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-slate-300 mb-2">Message</label>
+                            <textarea id="message" name="message" rows="5" required
+                                      class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit"
+                                    class="px-8 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-500 transition-all duration-300 hover:shadow-purple-glow">
+                                Send Message
+                            </button>
+                        </div>
+                        <p id="form-status" class="mt-4 text-center text-purple-400 h-6"></p>
+                    </form>
+
+                    <!-- Social Media Links (Moved After Form) -->
+                    <div class="my-12 pt-8 reveal">
+                        <p class="text-slate-400 mb-6">Or find me on social media</p>
+                        <div class="flex justify-center space-x-6 sm:space-x-8">
+                            <a href="https://www.linkedin.com/in/muhammed-rashid-kp-702b2b33b" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-300" aria-label="LinkedIn">
+                                <i class="fa-brands fa-linkedin text-3xl"></i>
+                            </a>
+                            <a href="https://github.com/rashid-kp" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-300" aria-label="GitHub">
+                                <i class="fa-brands fa-github text-3xl"></i>
+                            </a>
+                            <a href="mailto:rashidkp2004@gmail.com" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-300" aria-label="Gmail">
+                                <i class="fa-solid fa-envelope text-3xl"></i>
+                            </a>
+                            <a href="https://www.instagram.com/rashhiyee" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-300" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram text-3xl"></i>
+                            </a>
+                            <a href="https://x.com/KpRaashid" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-300" aria-label="Twitter (X)">
+                                <i class="fa-brands fa-x-twitter text-3xl"></i>
+                            </a>
+                            <a href="https://wa.me/918590935098" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-300" aria-label="WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-3xl"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-slate-800 bg-black">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-slate-400">
+                <div class="flex justify-center space-x-6 mb-4">
+                    <a href="https://www.linkedin.com/in/muhammed-rashid-kp-702b2b33b" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-200" aria-label="LinkedIn">
+                        <i class="fa-brands fa-linkedin text-2xl"></i>
+                    </a>
+                    <a href="https://github.com/rashid-kp" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-200" aria-label="GitHub">
+                        <i class="fa-brands fa-github text-2xl"></i>
+                    </a>
+                    <a href="mailto:rashidkp2004@gmail.com" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-200" aria-label="Gmail">
+                        <i class="fa-solid fa-envelope text-2xl"></i>
+                    </a>
+                    <a href="https://www.instagram.com/rashhiyee" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-200" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram text-2xl"></i>
+                    </a>
+                    <a href="https://x.com/KpRaashid" target="_blank" class="text-slate-400 hover:text-purple-400 transition-colors duration-200" aria-label="Twitter (X)">
+                        <i class="fa-brands fa-x-twitter text-2xl"></i>
+                    </a>
+                </div>
+                <p>&copy; <span id="current-year"></span> Muhammed Rashid KP. All rights reserved.</p>
+            </div>
+        </footer>
+
+    </div> <!-- End Main Content Wrapper -->
+
+
+    <!-- JavaScript for Mobile Menu, Animations, and Form -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Mobile Menu Toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close menu when a link is clicked
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+
+            // Set Current Year in Footer
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // --- Particle Animation ---
+            const canvas = document.getElementById('particle-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let particles = [];
+                let particleCount = 100; // Increased particle count
+
+                function setCanvasSize() {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                }
+
+                function Particle() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5; // Slow velocity
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.radius = Math.random() * 1.5;
+                    // Faint purple and white particles (slightly more visible)
+                    this.color = Math.random() > 0.3 ? 'rgba(192, 132, 252, 0.3)' : 'rgba(255, 255, 255, 0.3)';
+                }
+
+                Particle.prototype.draw = function() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                };
+
+                Particle.prototype.update = function() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Bounce off edges
+                    if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+                    if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+                };
+
+                function initParticles() {
+                    particles = [];
+                    for (let i = 0; i < particleCount; i++) {
+                        particles.push(new Particle());
+                    }
+                }
+
+                function animateParticles() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(p => {
+                        p.update();
+                        p.draw();
+                    });
+                    requestAnimationFrame(animateParticles);
+                }
+
+                // Initialize and animate
+                setCanvasSize();
+                initParticles();
+                animateParticles();
+
+                // Re-initialize on window resize
+                window.addEventListener('resize', () => {
+                    setCanvasSize();
+                    initParticles();
+                });
+            }
+
+            // --- Scroll Animation ---
+            const revealElements = document.querySelectorAll('.reveal');
+            const skillBars = document.querySelectorAll('.animate-progress');
+            let skillsAnimated = false;
+
+            function revealOnScroll() {
+                const windowHeight = window.innerHeight;
+
+                revealElements.forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    // Trigger when element is 100px from bottom
+                    if (elementTop < windowHeight - 100) {
+                        el.classList.add('active');
+
+                        // Check if this element is a skill bar
+                        const skillBar = el.querySelector('[data-width]');
+                        if(skillBar) {
+                             // Animate skill bar
+                            skillBar.style.width = skillBar.getAttribute('data-width');
+                            skillBar.classList.add('animate-progress');
+                        }
+                    }
+                });
+            }
+
+            // Add scroll listener
+            window.addEventListener('scroll', revealOnScroll);
+            // Run on load
+            revealOnScroll();
+
+            // --- Typewriter Logic ---
+            const typewriterElement = document.getElementById('typewriter-text');
+            const textArray = [
+                "ASPIRING SOFTWARE DEVELOPER",
+                "FLUTTER DEVELOPER",
+                "IT ENTHUSIAST",
+                "CROSS-PLATFORM SPECIALIST",
+                "UI/UX DESIGNER"
+            ];
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function type() {
+                const currentText = textArray[textIndex];
+                
+                // Add or remove one character
+                if (isDeleting) {
+                    typewriterElement.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typewriterElement.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                // Get typing speed
+                let typeSpeed = isDeleting ? 50 : 120;
+
+                // If word is fully typed
+                if (!isDeleting && charIndex === currentText.length) {
+                    typeSpeed = 2000; // Pause at end
+                    isDeleting = true;
+                } 
+                // If word is fully deleted
+                else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % textArray.length; // Move to next word
+                    typeSpeed = 500; // Pause before new word
+                }
+
+                setTimeout(type, typeSpeed);
+            }
+
+            if(typewriterElement) {
+                type(); // Start the animation
+            }
+
+
+            // --- Contact Form ---
+            const contactForm = document.getElementById('contact-form');
+            const formStatus = document.getElementById('form-status');
+
+            if (contactForm && formStatus) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Show a sending message
+                    formStatus.textContent = 'Sending message...';
+
+                    // Simulate a network request
+                    setTimeout(() => {
+                        // On success
+                        formStatus.textContent = 'Message sent successfully!';
+                        contactForm.reset(); // Clear the form
+
+                        // Clear the message after 3 seconds
+                        setTimeout(() => {
+                            formStatus.textContent = '';
+                        }, 3000);
+
+                    }, 1500);
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>
+
+
